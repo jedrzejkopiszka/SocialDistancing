@@ -27,6 +27,8 @@ public class Heading {
 
     public void bounceX(){
         dx *= -1;
+    }
+    public void bounceY(){
         dy *= -1;
     }
 }

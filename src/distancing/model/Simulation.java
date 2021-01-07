@@ -14,6 +14,7 @@ public class Simulation {
             people.add(new Person(State.SUSCEPTIBLE, world));
         }
         people.add(new Person(State.INFECTED, world));
+        draw();
     }
 
     public ArrayList<Person> getPeople(){
@@ -29,6 +30,22 @@ public class Simulation {
     public void draw(){
         for (Person p: people){
             p.draw();
+        }
+    }
+
+    public void resolveCollisions(){
+        for (Person p: people){
+            for (Person q: people){
+                if (p != q){
+                   p.collisionCheck(q);
+                }
+            }
+        }
+    }
+
+    public void feelBetter(){
+        for (Person p: people){
+            p.feelBetter();
         }
     }
 }

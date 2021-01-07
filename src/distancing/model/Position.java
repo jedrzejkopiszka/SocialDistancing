@@ -1,5 +1,6 @@
 package distancing.model;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 
 public class Position {
@@ -13,9 +14,9 @@ public class Position {
         this.y =  y;
     }
 
-    public Position(Pane world, int radius) {
-        this(radius + Math.random() * (world.getWidth() - 2 * radius),
-                radius + Math.random() * (world.getHeight() - 2*radius));
+    public Position(Pane world) {
+        this(Person.radius + Math.random() * (world.getWidth() - 2 * Person.radius),
+                Person.radius + Math.random() * (world.getHeight() - 2 * Person.radius));
     }
 
     public double getX() {
@@ -30,8 +31,21 @@ public class Position {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 
-    public void move(Heading heading){
+    public void move(Heading heading, Pane world){
         x += heading.getDx();
         y += heading.getDy();
+
+        if(x < Person.radius || x > world.getWidth() - Person.radius){
+            heading.bounceX();
+            x += heading.getDx();
+        }
+        if(y < Person.radius || y > world.getHeight() - Person.radius){
+            heading.bounceY();
+            y += heading.getDy();
+        }
+    }
+
+    public boolean collision(Position other){
+        return distance(other) < 2 * Person.radius;
     }
 }
