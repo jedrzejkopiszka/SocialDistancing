@@ -2,6 +2,7 @@ package distancing.gui;
 
 import distancing.model.Person;
 import distancing.model.Simulation;
+import distancing.model.State;
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,6 +14,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+
+import java.util.EnumMap;
 
 
 public class SocialSimController {
@@ -41,8 +46,14 @@ public class SocialSimController {
     @FXML
     TextField tickText;
 
+    @FXML
+    Pane chart;
+
+    @FXML
+    Pane histogram;
 
     Simulation sim;
+    EnumMap<State, Rectangle> hrects = new EnumMap<State, Rectangle>(State.class);
     private Movement clock;
 
     private class Movement extends AnimationTimer{
@@ -116,8 +127,23 @@ public class SocialSimController {
         clock.resetTicks();
         tickText.setText("" + clock.getTicks());
         world.getChildren().clear();
+        histogram.getChildren().clear();
+        chart.getChildren().clear();
         sim = new Simulation(world, 100);
+        setSize();
+        setRecovery();
+        setDistance();
+        int offset = 0;
+        for (State s: State.values()){
+            Rectangle r = new Rectangle(60, 0, s.getColor());
+            r.setTranslateX(offset);
+            offset += 65;
+            hrects.put(s, r);
+            histogram.getChildren().add(r);
+        }
+        drawCharts();
     }
+
 
     @FXML
     public void start(){
@@ -139,12 +165,37 @@ public class SocialSimController {
         sim.draw();
         clock.tick();
         tickText.setText("" + clock.getTicks());
+        drawCharts();
     }
 
     public void disableButtons(boolean start, boolean stop, boolean step){
         startButton.setDisable(start);
         stopButton.setDisable(stop);
         stepButton.setDisable(step);
+    }
+
+    private void drawCharts() {
+        EnumMap<State, Integer> currentPop = new EnumMap<State, Integer>(State.class);
+        for (Person p: sim.getPeople()){
+            if (!currentPop.containsKey(p.getState())){
+                currentPop.put(p.getState(), 0);
+            }
+            currentPop.put(p.getState(), 1 + currentPop.get(p.getState()));
+        }
+        for (State state: hrects.keySet()){
+            if (currentPop.containsKey(state)){
+                hrects.get(state).setHeight(currentPop.get(state));
+                hrects.get(state).setTranslateY(30 + 100 - currentPop.get(state));
+
+                Circle c = new Circle(1, state.getColor());
+                c.setTranslateX(clock.getTicks()/5.0);
+                c.setTranslateY(130 - currentPop.get(state));
+                chart.getChildren().add(c);
+            }
+        }
+        if (!currentPop.containsKey(State.INFECTED)){
+            stop();
+        }
     }
 }
 

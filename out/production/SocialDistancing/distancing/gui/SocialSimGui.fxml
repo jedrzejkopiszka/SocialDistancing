@@ -47,4 +47,14 @@
          </children>
       </VBox>
    </left>
+   <right>
+      <VBox minWidth="200.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane fx:id="chart" prefHeight="200.0" prefWidth="200.0" />
+            <Label text="Population over Time" />
+            <Pane fx:id="histogram" prefHeight="200.0" prefWidth="200.0" />
+            <Label text="Histogram snapshot" />
+         </children>
+      </VBox>
+   </right>
 </BorderPane>
