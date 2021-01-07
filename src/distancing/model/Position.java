@@ -31,15 +31,17 @@ public class Position {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 
-    public void move(Heading heading, Pane world){
+    public void move(Heading heading, Pane world, Position origin){
         x += heading.getDx();
         y += heading.getDy();
 
-        if(x < Person.radius || x > world.getWidth() - Person.radius){
+        if(x < Person.radius || x > world.getWidth() - Person.radius ||
+                distance(origin) > Person.distance){
             heading.bounceX();
             x += heading.getDx();
         }
-        if(y < Person.radius || y > world.getHeight() - Person.radius){
+        if(y < Person.radius || y > world.getHeight() - Person.radius ||
+                distance(origin) > Person.distance){
             heading.bounceY();
             y += heading.getDy();
         }

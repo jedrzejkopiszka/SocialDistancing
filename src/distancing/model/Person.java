@@ -7,9 +7,11 @@ import javafx.scene.shape.Circle;
 public class Person {
     public static int radius = 5;
     public static int healtime = 5 * 50;
+    public static int distance = 200;
 
     private State state;
     private Position loc;
+    private Position origin;
     private Heading heading;
     private Circle c;
     private Pane world;
@@ -20,6 +22,7 @@ public class Person {
         this.world = world;
         this.heading = new Heading();
         this.loc = new Position(world);
+        this.origin = new Position(loc.getX(), loc.getY());
         this.c = new Circle(radius, state.getColor());
         c.setStroke(Color.BLACK);
         world.getChildren().add(c);
@@ -35,7 +38,7 @@ public class Person {
     }
 
     public void move(){
-        loc.move(heading, world);
+        loc.move(heading, world, origin);
     }
 
     public void draw(){

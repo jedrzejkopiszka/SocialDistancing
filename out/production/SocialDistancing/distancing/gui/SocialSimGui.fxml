@@ -41,7 +41,7 @@
             <Label text="Recovery [sec]" />
             <Slider fx:id="recoverySlider" majorTickUnit="2.0" max="8.0" min="2.0" showTickLabels="true" showTickMarks="true" value="5.0" />
             <Label text="Distance" />
-            <Slider fx:id="distanceSlider" majorTickUnit="50.0" max="200.0" min="10.0" showTickLabels="true" showTickMarks="true" />
+            <Slider fx:id="distanceSlider" majorTickUnit="50.0" max="200.0" min="10.0" showTickLabels="true" showTickMarks="true" value="200.0" />
             <Label text="Ticks" />
             <TextField fx:id="tickText" />
          </children>

@@ -51,13 +51,25 @@ public class SocialSimController {
         private long INTERVAL = 10000000L / FRAMES_PER_SEC;
 
         private long last = 0;
-
+        private int ticks = 0;
         @Override
         public void handle(long now) {
             if (now - last > INTERVAL){
                 step();
                 last = now;
+                tick();
             }
+        }
+        public int getTicks(){
+            return ticks;
+        }
+
+        public void resetTicks() {
+            ticks = 0;
+        }
+
+        public void tick() {
+            ticks += 1;
         }
     }
 
@@ -86,13 +98,11 @@ public class SocialSimController {
     }
 
     private void setDistance() {
-        Person.radius = (int)distanceSlider.getValue();
-        sim.draw();
+        Person.distance = (int)distanceSlider.getValue();
     }
 
     private void setRecovery() {
-        Person.healtime = (int)recoverySlider.getValue();
-        sim.draw();
+        Person.healtime = 50 * (int)recoverySlider.getValue();
     }
 
     private void setSize() {
@@ -103,6 +113,8 @@ public class SocialSimController {
     @FXML
     public void reset(){
         stop();
+        clock.resetTicks();
+        tickText.setText("" + clock.getTicks());
         world.getChildren().clear();
         sim = new Simulation(world, 100);
     }
@@ -125,6 +137,8 @@ public class SocialSimController {
         sim.feelBetter();
         sim.resolveCollisions();
         sim.draw();
+        clock.tick();
+        tickText.setText("" + clock.getTicks());
     }
 
     public void disableButtons(boolean start, boolean stop, boolean step){
